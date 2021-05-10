@@ -19,6 +19,10 @@ function yScale(data) { // create Y scales
 }
 // function used for updating Axis var upon click on axis label
 function renderAxes(newXScale, xAxis) {
+    var xAxis = chartGroup.append("g")
+    .classed("x-axis", true)
+    .attr("transform", `translate(0, ${chartHeight})`)
+    .call(bottomAxis);
     var bottomAxis = d3.axisBottom(newXScale);
     xAxis.transition()
       .duration(1000)
@@ -117,6 +121,8 @@ function makeResponsive() {
         var xAxis = chartGroup.append("g")
         .classed("x-axis", true)
         .attr("transform", `translate(0, ${chartHeight})`)
+        .transition()
+        .duration(1500)
         .call(bottomAxis);
         // append y axis
         var yAxis = chartGroup.append("g")
@@ -126,18 +132,22 @@ function makeResponsive() {
         .data(ucbData)
         .enter()
         .append("circle")
+        .transition()
+        .duration(1500)
         .attr("cx", d => xLinearScale(d[chosenXAxis]))
         .attr("cy", d => yLinearScale(d[chosenYAxis]))
         .attr("r", 17)
         .attr("fill", "skyblue");
 
         chartGroup.append("g").selectAll("text").data(ucbData).enter().append("text")
+        .transition()
+        .duration(1500)
         .attr("x", d => xLinearScale(d[chosenXAxis]))
         .attr("y", d => yLinearScale(d[chosenYAxis])+3)
         .attr("text-anchor", "middle")
         .attr("font-size", "1rem")
         .attr("stroke-width", 5)
-        .attr("fill", "black")
+        .attr("fill", "white")
         .text(d => d.abbr);
 
     }).catch(function(error) {
