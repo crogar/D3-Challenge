@@ -89,8 +89,7 @@ function makeResponsive() {
 
      chartWidth = svgWidth - margin.left - margin.right;
      chartHeight = svgHeight - margin.top - margin.bottom;
-    // Create an SVG wrapper, append an SVG group that will hold our chart,
-    // and shift the latter by left and top margins.
+    // Create an SVG wrapper, append an SVG group that will hold our chart,and shift the latter by left and top margins.
     var svg = d3
     .select("#scatter")
     .append("svg")
