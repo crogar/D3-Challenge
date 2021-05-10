@@ -1,20 +1,21 @@
 // Initial Params
 var chosenXAxis = "poverty";
 var chosenYAxis = "healthcare";
-let chartWidth, chartHeight;
+let chartWidth, chartHeight, svgWidth, svgHeight;
 var xAxis, yAxis, chartGroup, circlesGroup;  //Making these variable global, that way can be accessed from anywhere in the code
+
 // function used for updating x-scale var upon click on axis label or within makeresizible function 
 function xScale(data) {
     // create scales
     var xLinearScale = d3.scaleLinear()
-      .domain([d3.min(data, d => d[chosenXAxis]) * 0.8,d3.max(data, d => d[chosenXAxis]) * 1.2])
+      .domain([d3.min(data, d => d[chosenXAxis]) * 0.8,d3.max(data, d => d[chosenXAxis]) * 1.1])
       .range([0, chartWidth]);
     return xLinearScale;
 }
 function yScale(data) { // function used for updating y-scale var upon click on axis label or within makeresizible function 
     var yLinearScale = d3.scaleLinear()
-    .domain([0, d3.max(data, d => d[chosenYAxis])+2])
-    .range([chartHeight, 0]);
+        .domain([0, d3.max(data, d => d[chosenYAxis])+2])
+        .range([chartHeight, 0]);
     return yLinearScale;
 }
 // function used for updating Axis var upon click on axis label or resizing event
@@ -33,6 +34,32 @@ function renderAxes(xLinearScale, yLinearScale) {
     .call(leftAxis);
 }
 
+function render_axislabels(){
+    // Create group for two x-axis labels
+    var labelsXGroup = chartGroup.append("g")
+    .attr("transform", `translate(${chartWidth / 2}, ${chartHeight + 20})`);
+    labelsXGroup.append("text")
+    .attr("x", 0).attr("y", 20)
+    .attr("value", "poverty") // value to grab for event listener
+    .classed("active", true)
+    .text("In Poverty(%)");
+    labelsXGroup.append("text")
+    .attr("x", 0).attr("y", 40)
+    .attr("value", "age") // value to grab for event listener
+    .classed("inactive", true)
+    .text("Age (Median)");
+    labelsXGroup.append("text")
+    .attr("x", 0).attr("y", 60)
+    .attr("value", "income") // value to grab for event listener
+    .classed("inactive", true)
+    .text("House Income (Median)");
+
+    // Create group for two x-axis labels
+    var labelsXGroup = chartGroup.append("g")
+    .attr("transform", `translate(${chartWidth / 2}, ${chartHeight + 20})`);
+
+}
+
 function renderCircles(data,xLinearScale,yLinearScale,onResize) {
     circlesGroup = chartGroup.selectAll("circle").data(data).enter()
     .append("circle")
@@ -40,7 +67,7 @@ function renderCircles(data,xLinearScale,yLinearScale,onResize) {
     .attr("cx", d => xLinearScale(d[chosenXAxis]))
     .attr("cy", d => yLinearScale(d[chosenYAxis]))
     .attr("r", 17)
-    .attr("fill", "skyblue");
+    .attr("class", "stateCircle");
 }
 function updateToolTip(chosenXAxis, circlesGroup) {
     var label;
@@ -79,8 +106,8 @@ function makeResponsive() {
         svgArea.remove();
     }
     // SVG wrapper dimensions are determined by the current width and height of the browser window.
-    var svgWidth = window.innerWidth*0.75;
-    var svgHeight = window.innerHeight*0.8;
+    svgWidth = window.innerWidth*0.75;
+    svgHeight = window.innerHeight*0.8;
 
     var margin = {
     top: 20,
@@ -118,24 +145,14 @@ function makeResponsive() {
         var yLinearScale = yScale(ucbData);
         // Rendering both Axis
         renderAxes(xLinearScale,yLinearScale)
-          // append initial circles
-          renderCircles(ucbData,xLinearScale,yLinearScale,true);
-        // circlesGroup = chartGroup.selectAll("circle").data(ucbData).enter()
-        // .append("circle")
-        // .attr("cx", d => xLinearScale(d[chosenXAxis]))
-        // .attr("cy", d => yLinearScale(d[chosenYAxis]))
-        // .attr("r", 17)
-        // .attr("fill", "skyblue");
-        // Appending states abbreviatons
+        // append initial circles
+        renderCircles(ucbData,xLinearScale,yLinearScale,true);
         chartGroup.append("g").selectAll("text").data(ucbData).enter().append("text")
         .attr("x", d => xLinearScale(d[chosenXAxis]))
         .attr("y", d => yLinearScale(d[chosenYAxis])+3)
-        .attr("text-anchor", "middle")
-        .attr("font-size", "1rem")
-        .attr("stroke-width", 5)
-        .attr("fill", "white")
-        .text(d => d.abbr);
+        .classed("stateText",true).text(d => d.abbr);
 
+        render_axislabels();
     }).catch(function(error) {
       console.log(error);
     });
