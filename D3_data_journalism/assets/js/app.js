@@ -3,7 +3,7 @@ var chosenXAxis = "poverty";
 var chosenYAxis = "healthcare";
 let chartWidth, chartHeight;
 var xAxis, yAxis, chartGroup;  //Making these variable global, that way can be accessed from anywhere in the code
-// function used for updating x-scale var upon click on axis label
+// function used for updating x-scale var upon click on axis label or within makeresizible function 
 function xScale(data) {
     // create scales
     var xLinearScale = d3.scaleLinear()
@@ -11,7 +11,7 @@ function xScale(data) {
       .range([0, chartWidth]);
     return xLinearScale;
 }
-function yScale(data) { // create Y scales
+function yScale(data) { // function used for updating y-scale var upon click on axis label or within makeresizible function 
     var yLinearScale = d3.scaleLinear()
     .domain([0, d3.max(data, d => d[chosenYAxis])+2])
     .range([chartHeight, 0]);
@@ -33,7 +33,7 @@ function renderAxes(xLinearScale, yLinearScale) {
     .call(leftAxis);
 }
 
-function renderCircles(circlesGroup, newXScale, chosenXAxis, newYScale, chosenYAxis) {
+function renderCircles(circlesGroup, newXScale, newYScale, ) {
     circlesGroup.transition()
       .duration(1000)
       .attr("cx", d => newXScale(d[chosenXAxis]))
@@ -111,7 +111,7 @@ function makeResponsive() {
             data.smokes = +data.smokes;
             data.healthcare = +data.healthcare;
         });
-        // console.log(ucbData)
+        // Creating Linear Scales
         var xLinearScale = xScale(ucbData);
         var yLinearScale = yScale(ucbData);
         // Rendering both Axis
@@ -123,7 +123,7 @@ function makeResponsive() {
         .attr("cy", d => yLinearScale(d[chosenYAxis]))
         .attr("r", 17)
         .attr("fill", "skyblue");
-
+        // Appending
         chartGroup.append("g").selectAll("text").data(ucbData).enter().append("text")
         .attr("x", d => xLinearScale(d[chosenXAxis]))
         .attr("y", d => yLinearScale(d[chosenYAxis])+3)
@@ -136,7 +136,6 @@ function makeResponsive() {
     }).catch(function(error) {
       console.log(error);
     });
- 
 }
 // When the browser loads, makeResponsive() is called.
 makeResponsive();
