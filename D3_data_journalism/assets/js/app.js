@@ -7,7 +7,7 @@ var chosenYAxis = "healthcare";
 function xScale(data, chosenXAxis) {
     // create scales
     var xLinearScale = d3.scaleLinear()
-      .domain([d3.min(data, d => d[chosenXAxis]) * 0.8,d3.max(hairData, d => d[chosenXAxis]) * 1.2])
+      .domain([d3.min(data, d => d[chosenXAxis]) * 0.8,d3.max(data, d => d[chosenXAxis]) * 1.2])
       .range([0, width]);
     return xLinearScale;
 }
@@ -122,16 +122,16 @@ function makeResponsive() {
         .call(bottomAxis);
 
         // append y axis
-        chartGroup.append("g")
+        var yAxis = chartGroup.append("g")
         .call(leftAxis);
 
           // append initial circles
         var circlesGroup = chartGroup.selectAll("circle")
-        .data(hairData)
+        .data(ucbData)
         .enter()
         .append("circle")
         .attr("cx", d => xLinearScale(d[chosenXAxis]))
-        .attr("cy", d => yLinearScale(d.num_hits))
+        .attr("cy", d => yLinearScale(d[chosenYAxis]))
         .attr("r", 20)
         .attr("fill", "pink")
         .attr("opacity", ".5");
