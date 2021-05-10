@@ -108,9 +108,33 @@ function makeResponsive() {
             data.income = +data.income;
             data.obesity = +data.obesity;
             data.obesity = +data.smokes;
-            data.obesity = +data.obesity;
+            data.obesity = +data.healthcare;
         });
         console.log(ucbData)
+        var xLinearScale = xScale(ucbData, chosenXAxis);
+        var yLinearScale = xScale(ucbData, chosenYAxis);
+        var bottomAxis = d3.axisBottom(xLinearScale);
+        var leftAxis = d3.axisLeft(yLinearScale);
+          // append x axis
+        var xAxis = chartGroup.append("g")
+        .classed("x-axis", true)
+        .attr("transform", `translate(0, ${height})`)
+        .call(bottomAxis);
+
+        // append y axis
+        chartGroup.append("g")
+        .call(leftAxis);
+
+          // append initial circles
+        var circlesGroup = chartGroup.selectAll("circle")
+        .data(hairData)
+        .enter()
+        .append("circle")
+        .attr("cx", d => xLinearScale(d[chosenXAxis]))
+        .attr("cy", d => yLinearScale(d.num_hits))
+        .attr("r", 20)
+        .attr("fill", "pink")
+        .attr("opacity", ".5");
     }).catch(function(error) {
       console.log(error);
     });
