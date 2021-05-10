@@ -130,6 +130,16 @@ function makeResponsive() {
         .attr("cy", d => yLinearScale(d[chosenYAxis]))
         .attr("r", 17)
         .attr("fill", "skyblue");
+
+        chartGroup.append("g").selectAll("text").data(ucbData).enter().append("text")
+        .attr("x", d => xLinearScale(d[chosenXAxis]))
+        .attr("y", d => yLinearScale(d[chosenYAxis])+3)
+        .attr("text-anchor", "middle")
+        .attr("font-size", "1rem")
+        .attr("stroke-width", 5)
+        .attr("fill", "black")
+        .text(d => d.abbr);
+
     }).catch(function(error) {
       console.log(error);
     });
