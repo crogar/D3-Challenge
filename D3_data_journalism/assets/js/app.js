@@ -33,12 +33,14 @@ function renderAxes(xLinearScale, yLinearScale) {
     .call(leftAxis);
 }
 
-function renderCircles(circlesGroup, newXScale, newYScale, ) {
-    circlesGroup.transition()
-      .duration(1000)
-      .attr("cx", d => newXScale(d[chosenXAxis]))
-      .attr("cy", d => newYScale(d[chosenYAxis]));
-    return circlesGroup;
+function renderCircles(data,xLinearScale,yLinearScale) {
+    circlesGroup = chartGroup.selectAll("circle").data(data).enter()
+    .append("circle")
+    .transition().duration(1500)
+    .attr("cx", d => xLinearScale(d[chosenXAxis]))
+    .attr("cy", d => yLinearScale(d[chosenYAxis]))
+    .attr("r", 17)
+    .attr("fill", "skyblue");
 }
 function updateToolTip(chosenXAxis, circlesGroup) {
     var label;
@@ -117,13 +119,14 @@ function makeResponsive() {
         // Rendering both Axis
         renderAxes(xLinearScale,yLinearScale)
           // append initial circles
-        var circlesGroup = chartGroup.selectAll("circle").data(ucbData).enter()
+        //   renderCircles(ucbData,xLinearScale,yLinearScale);
+        circlesGroup = chartGroup.selectAll("circle").data(ucbData).enter()
         .append("circle")
         .attr("cx", d => xLinearScale(d[chosenXAxis]))
         .attr("cy", d => yLinearScale(d[chosenYAxis]))
         .attr("r", 17)
         .attr("fill", "skyblue");
-        // Appending
+        // Appending states abbreviatons
         chartGroup.append("g").selectAll("text").data(ucbData).enter().append("text")
         .attr("x", d => xLinearScale(d[chosenXAxis]))
         .attr("y", d => yLinearScale(d[chosenYAxis])+3)
