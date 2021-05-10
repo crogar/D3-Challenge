@@ -1,6 +1,7 @@
 // Initial Params
 var chosenXAxis = "poverty";
 var chosenYAxis = "healthcare";
+var chartWidth, chartHeight;
 // var selectedXAxis = "", selectedYAxis="";
 
 // function used for updating x-scale var upon click on axis label
@@ -8,14 +9,14 @@ function xScale(data, chosenXAxis) {
     // create scales
     var xLinearScale = d3.scaleLinear()
       .domain([d3.min(data, d => d[chosenXAxis]) * 0.8,d3.max(data, d => d[chosenXAxis]) * 1.2])
-      .range([0, width]);
+      .range([0, chartWidth]);
     return xLinearScale;
 }
 function yScale(data, chosenYAxis) {
     // create scales
     var yLinearScale = d3.scaleLinear()
       .domain([d3.extent(data, d=> d[chosenYAxis])])
-      .range([width, 0]);
+      .range([chartHeight, 0]);
     return yLinearScale;
 }
 // function used for updating Axis var upon click on axis label
@@ -81,7 +82,7 @@ function makeResponsive() {
     top: 20,
     right: 40,
     bottom: 80,
-    left: 100
+    left: 30
     };
 
     var chartWidth = svgWidth - margin.left - margin.right;
@@ -107,18 +108,18 @@ function makeResponsive() {
             data.age = +data.age;
             data.income = +data.income;
             data.obesity = +data.obesity;
-            data.obesity = +data.smokes;
-            data.obesity = +data.healthcare;
+            data.smokes = +data.smokes;
+            data.healthcare = +data.healthcare;
         });
         console.log(ucbData)
         var xLinearScale = xScale(ucbData, chosenXAxis);
-        var yLinearScale = xScale(ucbData, chosenYAxis);
+        var yLinearScale = yScale(ucbData, chosenYAxis);
         var bottomAxis = d3.axisBottom(xLinearScale);
         var leftAxis = d3.axisLeft(yLinearScale);
           // append x axis
         var xAxis = chartGroup.append("g")
         .classed("x-axis", true)
-        .attr("transform", `translate(0, ${height})`)
+        .attr("transform", `translate(0, ${chartHeight})`)
         .call(bottomAxis);
 
         // append y axis
