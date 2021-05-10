@@ -33,10 +33,10 @@ function renderAxes(xLinearScale, yLinearScale) {
     .call(leftAxis);
 }
 
-function renderCircles(data,xLinearScale,yLinearScale) {
+function renderCircles(data,xLinearScale,yLinearScale,onResize) {
     circlesGroup = chartGroup.selectAll("circle").data(data).enter()
     .append("circle")
-    .transition().duration(1500)
+    .transition().duration(function(d){return onResize ? 0 : 1000;})
     .attr("cx", d => xLinearScale(d[chosenXAxis]))
     .attr("cy", d => yLinearScale(d[chosenYAxis]))
     .attr("r", 17)
@@ -119,13 +119,13 @@ function makeResponsive() {
         // Rendering both Axis
         renderAxes(xLinearScale,yLinearScale)
           // append initial circles
-        //   renderCircles(ucbData,xLinearScale,yLinearScale);
-        circlesGroup = chartGroup.selectAll("circle").data(ucbData).enter()
-        .append("circle")
-        .attr("cx", d => xLinearScale(d[chosenXAxis]))
-        .attr("cy", d => yLinearScale(d[chosenYAxis]))
-        .attr("r", 17)
-        .attr("fill", "skyblue");
+          renderCircles(ucbData,xLinearScale,yLinearScale,true);
+        // circlesGroup = chartGroup.selectAll("circle").data(ucbData).enter()
+        // .append("circle")
+        // .attr("cx", d => xLinearScale(d[chosenXAxis]))
+        // .attr("cy", d => yLinearScale(d[chosenYAxis]))
+        // .attr("r", 17)
+        // .attr("fill", "skyblue");
         // Appending states abbreviatons
         chartGroup.append("g").selectAll("text").data(ucbData).enter().append("text")
         .attr("x", d => xLinearScale(d[chosenXAxis]))
