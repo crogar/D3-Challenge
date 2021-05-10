@@ -2,7 +2,7 @@
 var chosenXAxis = "poverty";
 var chosenYAxis = "healthcare";
 let chartWidth, chartHeight;
-var xAxis, yAxis, chartGroup;  //Making these variable global, that way can be accessed from anywhere in the code
+var xAxis, yAxis, chartGroup, circlesGroup;  //Making these variable global, that way can be accessed from anywhere in the code
 // function used for updating x-scale var upon click on axis label or within makeresizible function 
 function xScale(data) {
     // create scales
@@ -24,7 +24,7 @@ function renderAxes(xLinearScale, yLinearScale) {
     .classed("x-axis", true)
     .attr("transform", `translate(0, ${chartHeight})`)
     .transition()
-    .duration(1000)
+    .duration(1500)
     .call(bottomAxis);
     var leftAxis = d3.axisLeft(yLinearScale);
     yAxis = chartGroup.append("g")
