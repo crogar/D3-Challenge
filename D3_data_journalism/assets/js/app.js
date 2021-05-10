@@ -1,22 +1,20 @@
 // Initial Params
 var chosenXAxis = "poverty";
 var chosenYAxis = "healthcare";
-var chartWidth, chartHeight;
-// var selectedXAxis = "", selectedYAxis="";
+let chartWidth, chartHeight;
 
 // function used for updating x-scale var upon click on axis label
-function xScale(data, chosenXAxis) {
+function xScale(data) {
     // create scales
     var xLinearScale = d3.scaleLinear()
       .domain([d3.min(data, d => d[chosenXAxis]) * 0.8,d3.max(data, d => d[chosenXAxis]) * 1.2])
       .range([0, chartWidth]);
     return xLinearScale;
 }
-function yScale(data, chosenYAxis) {
-    // create scales
+function yScale(data) { // create Y scales
     var yLinearScale = d3.scaleLinear()
-      .domain([d3.extent(data, d=> d[chosenYAxis])])
-      .range([chartHeight, 0]);
+    .domain([0, d3.max(data, d => d[chosenYAxis])+2])
+    .range([chartHeight, 0]);
     return yLinearScale;
 }
 // function used for updating Axis var upon click on axis label
@@ -27,8 +25,7 @@ function renderAxes(newXScale, xAxis) {
       .call(bottomAxis);
     return xAxis;
 }
-// function used for updating circles group with a transition to
-// new circles
+// function used for updating circles group with a transition to new circles
 function renderCircles(circlesGroup, newXScale, chosenXAxis, newYScale, chosenYAxis) {
     circlesGroup.transition()
       .duration(1000)
@@ -75,8 +72,8 @@ function makeResponsive() {
     }
     // SVG wrapper dimensions are determined by the current width and
     // height of the browser window.
-    var svgWidth = window.innerWidth*0.70;
-    var svgHeight = window.innerHeight*0.60;
+    var svgWidth = window.innerWidth*0.75;
+    var svgHeight = window.innerHeight*0.8;
 
     var margin = {
     top: 20,
@@ -85,8 +82,8 @@ function makeResponsive() {
     left: 30
     };
 
-    var chartWidth = svgWidth - margin.left - margin.right;
-    var chartHeight = svgHeight - margin.top - margin.bottom;
+     chartWidth = svgWidth - margin.left - margin.right;
+     chartHeight = svgHeight - margin.top - margin.bottom;
 
     // Create an SVG wrapper, append an SVG group that will hold our chart,
     // and shift the latter by left and top margins.
@@ -111,9 +108,9 @@ function makeResponsive() {
             data.smokes = +data.smokes;
             data.healthcare = +data.healthcare;
         });
-        console.log(ucbData)
-        var xLinearScale = xScale(ucbData, chosenXAxis);
-        var yLinearScale = yScale(ucbData, chosenYAxis);
+        // console.log(ucbData)
+        var xLinearScale = xScale(ucbData);
+        var yLinearScale = yScale(ucbData);
         var bottomAxis = d3.axisBottom(xLinearScale);
         var leftAxis = d3.axisLeft(yLinearScale);
           // append x axis
@@ -121,11 +118,9 @@ function makeResponsive() {
         .classed("x-axis", true)
         .attr("transform", `translate(0, ${chartHeight})`)
         .call(bottomAxis);
-
         // append y axis
         var yAxis = chartGroup.append("g")
         .call(leftAxis);
-
           // append initial circles
         var circlesGroup = chartGroup.selectAll("circle")
         .data(ucbData)
@@ -133,15 +128,13 @@ function makeResponsive() {
         .append("circle")
         .attr("cx", d => xLinearScale(d[chosenXAxis]))
         .attr("cy", d => yLinearScale(d[chosenYAxis]))
-        .attr("r", 20)
-        .attr("fill", "pink")
-        .attr("opacity", ".5");
+        .attr("r", 17)
+        .attr("fill", "skyblue");
     }).catch(function(error) {
       console.log(error);
     });
  
 }
-
 // When the browser loads, makeResponsive() is called.
 makeResponsive();
 // When the browser window is resized, makeResponsive() is called.
