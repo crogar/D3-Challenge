@@ -1,8 +1,9 @@
-// Initial Params
+// Initial Params. Making these variable global, that way can be accessed from anywhere in the code
 var chosenXAxis = "poverty";
 var chosenYAxis = "healthcare";
 let chartWidth, chartHeight, svgWidth, svgHeight;
-var xAxis, yAxis, chartGroup, circlesGroup;  //Making these variable global, that way can be accessed from anywhere in the code
+var xAxis, yAxis, chartGroup, circlesGroup;  
+var margin = {top: 20, right: 40, bottom: 80, left: 30};
 
 // function used for updating x-scale var upon click on axis label or within makeresizible function 
 function xScale(data) {
@@ -37,26 +38,31 @@ function renderAxes(xLinearScale, yLinearScale) {
 function render_axislabels(){
     // Create group for two x-axis labels
     var labelsXGroup = chartGroup.append("g")
-    .attr("transform", `translate(${chartWidth / 2}, ${chartHeight + 20})`);
+        .attr("transform", `translate(${chartWidth / 2}, ${chartHeight + 20})`);
     labelsXGroup.append("text")
-    .attr("x", 0).attr("y", 20)
-    .attr("value", "poverty") // value to grab for event listener
-    .classed("active", true)
-    .text("In Poverty(%)");
+        .attr("x", 0).attr("y", 20)
+        .attr("value", "poverty") // value to grab for event listener
+        .classed("active", true)
+        .text("In Poverty(%)");
     labelsXGroup.append("text")
-    .attr("x", 0).attr("y", 40)
-    .attr("value", "age") // value to grab for event listener
-    .classed("inactive", true)
-    .text("Age (Median)");
+        .attr("x", 0).attr("y", 40)
+        .attr("value", "age") // value to grab for event listener
+        .classed("inactive", true)
+        .text("Age (Median)");
     labelsXGroup.append("text")
-    .attr("x", 0).attr("y", 60)
-    .attr("value", "income") // value to grab for event listener
-    .classed("inactive", true)
-    .text("House Income (Median)");
+        .attr("x", 0).attr("y", 60)
+        .attr("value", "income") // value to grab for event listener
+        .classed("inactive", true)
+        .text("House Income (Median)");
 
     // Create group for two x-axis labels
-    var labelsXGroup = chartGroup.append("g")
-    .attr("transform", `translate(${chartWidth / 2}, ${chartHeight + 20})`);
+    chartGroup.append("text")
+        .attr("transform", `translate(${chartMargin.left - 0}, ${chartHeight * 0.63}) rotate(-90)`)
+        .classed("inactive", true)
+        .attr("class", "axis_label y_axis_label text")
+        .attr("fill", "pink")
+        .attr("opacity", ".5")
+        .text("Lacks Healthcare (%)");
 
 }
 
@@ -108,13 +114,6 @@ function makeResponsive() {
     // SVG wrapper dimensions are determined by the current width and height of the browser window.
     svgWidth = window.innerWidth*0.75;
     svgHeight = window.innerHeight*0.8;
-
-    var margin = {
-    top: 20,
-    right: 40,
-    bottom: 80,
-    left: 30
-    };
 
      chartWidth = svgWidth - margin.left - margin.right;
      chartHeight = svgHeight - margin.top - margin.bottom;
