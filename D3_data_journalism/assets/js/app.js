@@ -2,7 +2,7 @@
 var chosenXAxis = "poverty";
 var chosenYAxis = "healthcare";
 let chartWidth, chartHeight;
-
+var xAxis, yAxis, chartGroup;  //Making these variable global, that way can be accessed from anywhere in the code
 // function used for updating x-scale var upon click on axis label
 function xScale(data) {
     // create scales
@@ -17,19 +17,22 @@ function yScale(data) { // create Y scales
     .range([chartHeight, 0]);
     return yLinearScale;
 }
-// function used for updating Axis var upon click on axis label
-function renderAxes(newXScale, xAxis) {
-    var xAxis = chartGroup.append("g")
+// function used for updating Axis var upon click on axis label or resizing event
+function renderAxes(xLinearScale, yLinearScale) {
+    var bottomAxis = d3.axisBottom(xLinearScale);
+     xAxis = chartGroup.append("g")
     .classed("x-axis", true)
     .attr("transform", `translate(0, ${chartHeight})`)
+    .transition()
+    .duration(1000)
     .call(bottomAxis);
-    var bottomAxis = d3.axisBottom(newXScale);
-    xAxis.transition()
-      .duration(1000)
-      .call(bottomAxis);
-    return xAxis;
+    var leftAxis = d3.axisLeft(yLinearScale);
+    yAxis = chartGroup.append("g")
+    .transition()
+    .duration(1500)
+    .call(leftAxis);
 }
-// function used for updating circles group with a transition to new circles
+
 function renderCircles(circlesGroup, newXScale, chosenXAxis, newYScale, chosenYAxis) {
     circlesGroup.transition()
       .duration(1000)
@@ -67,15 +70,13 @@ function updateToolTip(chosenXAxis, circlesGroup) {
   }
 
 function makeResponsive() {
-    // if the SVG area isn't empty when the browser loads,
-    // remove it and replace it with a resized version of the chart
+    // if the SVG area isn't empty when the browser loads, remove it and replace it with a resized version of the chart
     var svgArea = d3.select("body").select("svg");
     // clear svg is not empty
     if (!svgArea.empty()) {
         svgArea.remove();
     }
-    // SVG wrapper dimensions are determined by the current width and
-    // height of the browser window.
+    // SVG wrapper dimensions are determined by the current width and height of the browser window.
     var svgWidth = window.innerWidth*0.75;
     var svgHeight = window.innerHeight*0.8;
 
@@ -88,7 +89,6 @@ function makeResponsive() {
 
      chartWidth = svgWidth - margin.left - margin.right;
      chartHeight = svgHeight - margin.top - margin.bottom;
-
     // Create an SVG wrapper, append an SVG group that will hold our chart,
     // and shift the latter by left and top margins.
     var svg = d3
@@ -98,7 +98,7 @@ function makeResponsive() {
     .attr("height", svgHeight);
 
     // Append an SVG group
-    var chartGroup = svg.append("g")
+     chartGroup = svg.append("g")
     .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
     d3.csv("../assets/data/data.csv").then(function(ucbData, err) {
@@ -115,33 +115,17 @@ function makeResponsive() {
         // console.log(ucbData)
         var xLinearScale = xScale(ucbData);
         var yLinearScale = yScale(ucbData);
-        var bottomAxis = d3.axisBottom(xLinearScale);
-        var leftAxis = d3.axisLeft(yLinearScale);
-          // append x axis
-        var xAxis = chartGroup.append("g")
-        .classed("x-axis", true)
-        .attr("transform", `translate(0, ${chartHeight})`)
-        .transition()
-        .duration(1500)
-        .call(bottomAxis);
-        // append y axis
-        var yAxis = chartGroup.append("g")
-        .call(leftAxis);
+        // Rendering both Axis
+        renderAxes(xLinearScale,yLinearScale)
           // append initial circles
-        var circlesGroup = chartGroup.selectAll("circle")
-        .data(ucbData)
-        .enter()
+        var circlesGroup = chartGroup.selectAll("circle").data(ucbData).enter()
         .append("circle")
-        .transition()
-        .duration(1500)
         .attr("cx", d => xLinearScale(d[chosenXAxis]))
         .attr("cy", d => yLinearScale(d[chosenYAxis]))
         .attr("r", 17)
         .attr("fill", "skyblue");
 
         chartGroup.append("g").selectAll("text").data(ucbData).enter().append("text")
-        .transition()
-        .duration(1500)
         .attr("x", d => xLinearScale(d[chosenXAxis]))
         .attr("y", d => yLinearScale(d[chosenYAxis])+3)
         .attr("text-anchor", "middle")
