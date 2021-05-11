@@ -2,7 +2,7 @@
 var chosenXAxis = "poverty";
 var chosenYAxis = "healthcare";
 let chartWidth, chartHeight, svgWidth, svgHeight;
-var xAxis, yAxis, chartGroup, circlesGroup;  
+var xAxis, yAxis, chartGroup, circlesGroup, svg;  
 var margin = {top: 20, right: 40, bottom: 80, left: 100};
 
 // function used for updating x-scale var upon click on axis label or within makeresizible function 
@@ -37,9 +37,10 @@ function renderAxes(xLinearScale, yLinearScale) {
 function render_axislabels(){
     // Create group for two x-axis labels
     var labelsXGroup = chartGroup.append("g")
-        .attr("transform", `translate(${chartWidth / 2}, ${chartHeight + 20})`);
+        .attr("transform", `translate(${chartWidth / 2}, ${chartHeight + 20})`)
+        .classed('axis',true);
     labelsXGroup.append("text")
-        .attr("x", 0).attr("y", 20)
+        .attr("y", 20).attr("x", 0)
         .attr("value", "poverty") // value to grab for event listener
         .classed("active", true)
         .text("In Poverty(%)");
@@ -53,9 +54,10 @@ function render_axislabels(){
         .attr("value", "income") // value to grab for event listener
         .classed("inactive", true)
         .text("House Income (Median)");
-    // Create group for two x-axis labels
+    // Create group for 3 Y-axis labels
     var labelsYGroup = chartGroup.append("g")
-        .attr("transform", "rotate(-90)").attr("y", 0 - margin.left).attr("x", 0 - (chartHeight / 2));
+        .attr("transform", "rotate(-90)").attr("y", 0 - margin.left).attr("x", 0 - (chartHeight / 2))
+        .classed('axis',true);
     labelsYGroup.append("text")
         .attr("y", 0 - margin.left+50).attr("x", 0-(chartHeight / 2))
         .attr("dy", "1em")
@@ -77,42 +79,36 @@ function render_axislabels(){
 }
 
 function renderCircles(data,xLinearScale,yLinearScale,onResize) {
+    var toolTip = d3.tip().attr("class", "d3-tip").offset([80, -60])
+    .html(d => `<strong>${(d.abbr)}</strong><br>${chosenXAxis}: ${d[chosenXAxis]}<br> ${chosenYAxis}: ${d[chosenYAxis]}`);
+    d3.select('g').call(toolTip);
+
     circlesGroup = chartGroup.selectAll("circle").data(data).enter()
     .append("circle")
-    .transition().duration(function(d){return onResize ? 0 : 1000;})
     .attr("cx", d => xLinearScale(d[chosenXAxis]))
     .attr("cy", d => yLinearScale(d[chosenYAxis]))
     .attr("r", 17)
     .attr("class", "stateCircle");
-}
-function updateToolTip(chosenXAxis, circlesGroup) {
-    var label;
-    if (chosenXAxis === "hair_length") {
-      label = "Hair Length:";
-    }
-    else {
-      label = "# of Albums:";
-    }
-  
-    var toolTip = d3.tip()
-      .attr("class", "tooltip")
-      .offset([80, -60])
-      .html(function(d) {
-        return (`${d.rockband}<br>${label} ${d[chosenXAxis]}`);
-      });
-  
-    circlesGroup.call(toolTip);
-  
-    circlesGroup.on("mouseover", function(data) {
-      toolTip.show(data);
-    })
-      // onmouseout event
-      .on("mouseout", function(data, index) {
+
+    var text_group = chartGroup.append("g").selectAll("text").data(data).enter().append("text")
+    .attr("x", d => xLinearScale(d[chosenXAxis]))
+    .attr("y", d => yLinearScale(d[chosenYAxis])+3)
+    .classed("stateText",true).text(d => d.abbr);
+
+    circlesGroup.transition().duration(function(d){return onResize ? 0 : 1000;})
+    circlesGroup.on('mouseover', function(d, i){
+        toolTip.show(d,this);
+      })
+      .on('mouseout', function(d, i){
         toolTip.hide(data);
       });
-  
-    return circlesGroup;
-  }
+      text_group.on('mouseover', function(d, i){
+        toolTip.show(d,this);
+      })
+      .on('mouseout', function(d, i){
+        toolTip.hide(data);
+      });
+}
 
 function makeResponsive() {
     // if the SVG area isn't empty when the browser loads, remove it and replace it with a resized version of the chart
@@ -128,7 +124,7 @@ function makeResponsive() {
      chartWidth = svgWidth - margin.left - margin.right;
      chartHeight = svgHeight - margin.top - margin.bottom;
     // Create an SVG wrapper, append an SVG group that will hold our chart,and shift the latter by left and top margins.
-    var svg = d3
+    svg = d3
     .select("#scatter")
     .append("svg")
     .attr("width", svgWidth)
@@ -156,14 +152,7 @@ function makeResponsive() {
         renderAxes(xLinearScale,yLinearScale)
         // append initial circles
         renderCircles(ucbData,xLinearScale,yLinearScale,true);
-        chartGroup.append("g").selectAll("text").data(ucbData).enter().append("text")
-        .attr("x", d => xLinearScale(d[chosenXAxis]))
-        .attr("y", d => yLinearScale(d[chosenYAxis])+3)
-        .classed("stateText",true).text(d => d.abbr);
-
-        render_axislabels();
-    }).catch(function(error) {
-      console.log(error);
+        render_axislabels(); // calling function to render the axis
     });
 }
 // When the browser loads, makeResponsive() is called.
