@@ -33,7 +33,7 @@ function renderAxes(xLinearScale, yLinearScale) {
     .duration(1500)
     .call(leftAxis);
 }
-
+// function tha renders AxisLabels, creating one group for xlabes and another for ylabels
 function render_axislabels(){
     // Create group for two x-axis labels
     var labelsXGroup = chartGroup.append("g")
@@ -96,7 +96,7 @@ function renderCircles(data,xLinearScale,yLinearScale,onResize) {
     .attr("y", d => yLinearScale(d[chosenYAxis])+3)
     .classed("stateText",true).text(d => d.abbr);
 
-    // circlesGroup.transition().duration(function(d){return onResize ? 0 : 1000;});
+    // Animating circles by increasing the radius size
     circlesGroup.transition()
         .duration(100) .delay(function(d,i){ return i * (120 / 4); })
         .attr('r', 17);
@@ -106,7 +106,7 @@ function renderCircles(data,xLinearScale,yLinearScale,onResize) {
       })
       .on('mouseout', function(d, i){
         toolTip.hide(data);
-      });
+      }); // the tooltip also works on the State abbreviations.
       text_group.on('mouseover', function(d, i){
         toolTip.show(d,this);
       })
