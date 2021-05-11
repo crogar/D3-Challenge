@@ -38,43 +38,43 @@ function render_axislabels(){
     // Create group for two x-axis labels
     var labelsXGroup = chartGroup.append("g")
         .attr("transform", `translate(${chartWidth / 2}, ${chartHeight + 20})`)
-        .classed('axis',true);
+        .classed('xAxis',true);
     labelsXGroup.append("text")
         .attr("y", 20).attr("x", 0)
         .attr("value", "poverty") // value to grab for event listener
-        .classed("active", true)
+        .attr("class", function(d){return chosenXAxis=='poverty' ? 'active':'inactive'})
         .text("In Poverty(%)");
     labelsXGroup.append("text")
         .attr("x", 0).attr("y", 40)
         .attr("value", "age") // value to grab for event listener
-        .classed("inactive", true)
+        .attr("class", function(d){return chosenXAxis=='age' ? 'active':'inactive'})
         .text("Age (Median)");
     labelsXGroup.append("text")
         .attr("x", 0).attr("y", 60)
         .attr("value", "income") // value to grab for event listener
-        .classed("inactive", true)
+        .attr("class", function(d){return chosenXAxis=='income' ? 'active':'inactive'})
         .text("House Income (Median)");
     // Create group for 3 Y-axis labels
     var labelsYGroup = chartGroup.append("g")
         .attr("transform", "rotate(-90)").attr("y", 0 - margin.left).attr("x", 0 - (chartHeight / 2))
-        .classed('axis',true);
+        .classed('yAxis',true);
     labelsYGroup.append("text")
         .attr("y", 0 - margin.left+50).attr("x", 0-(chartHeight / 2))
         .attr("dy", "1em")
         .attr("value", "healthcare") // value to grab for event listener
-        .attr("class", 'axis-text active')
+        .attr("class", function(d){return chosenYAxis=='healthcare' ? 'active':'inactive'})
         .text("Lacks Healthcare (%)");
     labelsYGroup.append("text")
         .attr("y", 0 - margin.left+30).attr("x", 0-(chartHeight / 2))
         .attr("dy", "1em")
         .attr("value", "smokes") // value to grab for event listener
-        .attr("class", 'axis-text inactive')
+        .attr("class", function(d){return chosenYAxis=='smokes' ? 'active':'inactive'})
         .text("Smokes (%)");
     labelsYGroup.append("text")
         .attr("y", 0 - margin.left+10).attr("x", 0-(chartHeight / 2))
         .attr("dy", "1em")
         .attr("value", "obesity") // value to grab for event listener
-        .attr("class", 'axis-text inactive')
+        .attr("class", function(d){return chosenYAxis=='obesity' ? 'active':'inactive'})
         .text("Obese (%)");
 }
 
@@ -88,7 +88,7 @@ function renderCircles(data,xLinearScale,yLinearScale) {
     .append("circle")
     .attr("cx", d => xLinearScale(d[chosenXAxis]))
     .attr("cy", d => yLinearScale(d[chosenYAxis]))
-    .attr("r", 10)
+    .attr("r", 5)
     .attr("class", "stateCircle");
 
     var text_group = chartGroup.append("g").selectAll("text").data(data).enter().append("text")
@@ -164,3 +164,4 @@ function makeResponsive() {
 makeResponsive();
 // When the browser window is resized, makeResponsive() is called.
 d3.select(window).on("resize", makeResponsive);
+// When a new Axislabel is selected we will update the chose Axis
