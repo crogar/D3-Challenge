@@ -93,7 +93,7 @@ function renderCircles(data,xLinearScale,yLinearScale) {
 
     var text_group = chartGroup.append("g").selectAll("text").data(data).enter().append("text")
     .attr("x", d => xLinearScale(d[chosenXAxis]))
-    .attr("y", d => yLinearScale(d[chosenYAxis])+3)
+    .attr("y", d => yLinearScale(d[chosenYAxis])+5)
     .classed("stateText",true).text(d => d.abbr);
 
     // Animating circles by increasing the radius size
