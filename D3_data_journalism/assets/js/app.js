@@ -57,23 +57,23 @@ function render_axislabels(){
     var labelsYGroup = chartGroup.append("g")
         .attr("transform", "rotate(-90)").attr("y", 0 - margin.left).attr("x", 0 - (chartHeight / 2));
     labelsYGroup.append("text")
-        .attr("y", 0 - margin.left+50)
-        .attr("x", 0-(chartHeight / 2))
+        .attr("y", 0 - margin.left+50).attr("x", 0-(chartHeight / 2))
         .attr("dy", "1em")
+        .attr("value", "healthcare") // value to grab for event listener
         .attr("class", 'axis-text active')
         .text("Lacks Healthcare (%)");
     labelsYGroup.append("text")
-    .attr("y", 0 - margin.left+30)
-    .attr("x", 0-(chartHeight / 2))
-    .attr("dy", "1em")
-    .attr("class", 'axis-text inactive')
-    .text("Smokes (%)");
+        .attr("y", 0 - margin.left+30).attr("x", 0-(chartHeight / 2))
+        .attr("dy", "1em")
+        .attr("value", "smokes") // value to grab for event listener
+        .attr("class", 'axis-text inactive')
+        .text("Smokes (%)");
     labelsYGroup.append("text")
-    .attr("y", 0 - margin.left+30)
-    .attr("x", 0-(chartHeight / 2))
-    .attr("dy", "1em")
-    .attr("class", 'axis-text inactive')
-    .text("Obese (%)");
+        .attr("y", 0 - margin.left+10).attr("x", 0-(chartHeight / 2))
+        .attr("dy", "1em")
+        .attr("value", "obesity") // value to grab for event listener
+        .attr("class", 'axis-text inactive')
+        .text("Obese (%)");
 }
 
 function renderCircles(data,xLinearScale,yLinearScale,onResize) {
@@ -138,7 +138,7 @@ function makeResponsive() {
      chartGroup = svg.append("g")
     .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
-    d3.csv("../assets/data/data.csv").then(function(ucbData, err) {
+    d3.csv("../assets/data/data.csv").then(function(ucbData, err) {   //reading our csv file
         if (err) throw err;
           // parse data
           ucbData.forEach(function(data) {
