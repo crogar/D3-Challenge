@@ -3,11 +3,10 @@ var chosenXAxis = "poverty";
 var chosenYAxis = "healthcare";
 let chartWidth, chartHeight, svgWidth, svgHeight;
 var xAxis, yAxis, chartGroup, circlesGroup;  
-var margin = {top: 20, right: 40, bottom: 80, left: 30};
+var margin = {top: 20, right: 40, bottom: 80, left: 100};
 
 // function used for updating x-scale var upon click on axis label or within makeresizible function 
 function xScale(data) {
-    // create scales
     var xLinearScale = d3.scaleLinear()
       .domain([d3.min(data, d => d[chosenXAxis]) * 0.8,d3.max(data, d => d[chosenXAxis]) * 1.1])
       .range([0, chartWidth]);
@@ -54,16 +53,27 @@ function render_axislabels(){
         .attr("value", "income") // value to grab for event listener
         .classed("inactive", true)
         .text("House Income (Median)");
-
     // Create group for two x-axis labels
-    chartGroup.append("text")
-        .attr("transform", `translate(${chartMargin.left - 0}, ${chartHeight * 0.63}) rotate(-90)`)
-        .classed("inactive", true)
-        .attr("class", "axis_label y_axis_label text")
-        .attr("fill", "pink")
-        .attr("opacity", ".5")
+    var labelsYGroup = chartGroup.append("g")
+        .attr("transform", "rotate(-90)").attr("y", 0 - margin.left).attr("x", 0 - (chartHeight / 2));
+    labelsYGroup.append("text")
+        .attr("y", 0 - margin.left+50)
+        .attr("x", 0-(chartHeight / 2))
+        .attr("dy", "1em")
+        .attr("class", 'axis-text active')
         .text("Lacks Healthcare (%)");
-
+    labelsYGroup.append("text")
+    .attr("y", 0 - margin.left+30)
+    .attr("x", 0-(chartHeight / 2))
+    .attr("dy", "1em")
+    .attr("class", 'axis-text inactive')
+    .text("Smokes (%)");
+    labelsYGroup.append("text")
+    .attr("y", 0 - margin.left+30)
+    .attr("x", 0-(chartHeight / 2))
+    .attr("dy", "1em")
+    .attr("class", 'axis-text inactive')
+    .text("Smokes (%)");
 }
 
 function renderCircles(data,xLinearScale,yLinearScale,onResize) {
