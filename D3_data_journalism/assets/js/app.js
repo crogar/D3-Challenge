@@ -57,7 +57,7 @@ function render_axislabels(){
     // Create group for 3 Y-axis labels
     var labelsYGroup = chartGroup.append("g")
         .attr("transform", "rotate(-90)").attr("y", 0 - margin.left).attr("x", 0 - (chartHeight / 2))
-        .classed('yAxis',true);
+        .classed('yAxisGroup',true);
     labelsYGroup.append("text")
         .attr("y", 0 - margin.left+50).attr("x", 0-(chartHeight / 2))
         .attr("dy", "1em")
@@ -158,6 +158,18 @@ function makeResponsive() {
         // append initial circles
         renderCircles(ucbData,xLinearScale,yLinearScale);
         render_axislabels(); // calling function to render the axis
+        // When a new Axislabel is selected we will update the chose Axis
+        temp = d3.selectAll("g").selectAll('.xAxisGroup').selectAll('text')
+        temp.on('click', function(){
+            chosenXAxis = d3.select(this).attr('value')
+            makeResponsive()
+        });
+        // When a new Axislabel is selected we will update the chose Axis(y)
+        temp = d3.selectAll("g").selectAll('.yAxisGroup').selectAll('text')
+        temp.on('click', function(){
+            chosenYAxis = d3.select(this).attr('value')
+            makeResponsive()
+        });
     });
 }
 // When the browser loads, makeResponsive() is called.
