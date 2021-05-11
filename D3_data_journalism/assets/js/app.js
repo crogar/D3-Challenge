@@ -73,7 +73,7 @@ function render_axislabels(){
     .attr("x", 0-(chartHeight / 2))
     .attr("dy", "1em")
     .attr("class", 'axis-text inactive')
-    .text("Smokes (%)");
+    .text("Obese (%)");
 }
 
 function renderCircles(data,xLinearScale,yLinearScale,onResize) {
