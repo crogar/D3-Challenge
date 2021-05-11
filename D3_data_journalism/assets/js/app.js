@@ -81,7 +81,7 @@ function render_axislabels(){
 function renderCircles(data,xLinearScale,yLinearScale) {
     // Dinamically creating a toolTip
     var toolTip = d3.tip().attr("class", "d3-tip").offset([80, -60])
-    .html(d => `<strong>${(d.abbr)}</strong><br>${chosenXAxis}: ${d[chosenXAxis]}<br> ${chosenYAxis}: ${d[chosenYAxis]}`);
+    .html(d => `<strong>${(d.state)}</strong><br>${chosenXAxis}: ${d[chosenXAxis]}<br> ${chosenYAxis}: ${d[chosenYAxis]}`);
     d3.select('g').call(toolTip);
 
     circlesGroup = chartGroup.selectAll("circle").data(data).enter()
