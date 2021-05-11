@@ -159,12 +159,12 @@ function makeResponsive() {
         renderCircles(ucbData,xLinearScale,yLinearScale);
         render_axislabels(); // calling function to render the axis
         // When a new Axislabel is selected we will update the chose Axis
-        d3.selectAll("g").selectAll('.xAxisGroup').selectAll('text').on('click', function(){
+        d3.selectAll('.xAxisGroup').selectAll('text').on('click', function(){
             chosenXAxis = d3.select(this).attr('value')
             makeResponsive()
         });
         // When a new Axislabel is selected we will update the chose Axis(y)
-        d3.selectAll("g").selectAll('.yAxisGroup').selectAll('text').on('click', function(){
+        d3.selectAll('.yAxisGroup').selectAll('text').on('click', function(){
             chosenYAxis = d3.select(this).attr('value')
             makeResponsive()
         });
