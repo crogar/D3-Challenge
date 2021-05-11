@@ -3,7 +3,7 @@ var chosenXAxis = "poverty";
 var chosenYAxis = "healthcare";
 let chartWidth, chartHeight, svgWidth, svgHeight;
 var xAxis, yAxis, chartGroup, circlesGroup, svg;  
-var margin = {top: 20, right: 40, bottom: 80, left: 100};
+var margin = {top: 20, right: 40, bottom: 90, left: 100};
 
 // function used for updating x-scale var upon click on axis label or within makeresizible function 
 function xScale(data) {
