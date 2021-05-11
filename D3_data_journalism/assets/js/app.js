@@ -79,6 +79,7 @@ function render_axislabels(){
 }
 
 function renderCircles(data,xLinearScale,yLinearScale,onResize) {
+    // Dinamically creating a toolTip
     var toolTip = d3.tip().attr("class", "d3-tip").offset([80, -60])
     .html(d => `<strong>${(d.abbr)}</strong><br>${chosenXAxis}: ${d[chosenXAxis]}<br> ${chosenYAxis}: ${d[chosenYAxis]}`);
     d3.select('g').call(toolTip);
@@ -87,7 +88,7 @@ function renderCircles(data,xLinearScale,yLinearScale,onResize) {
     .append("circle")
     .attr("cx", d => xLinearScale(d[chosenXAxis]))
     .attr("cy", d => yLinearScale(d[chosenYAxis]))
-    .attr("r", 17)
+    .attr("r", 10)
     .attr("class", "stateCircle");
 
     var text_group = chartGroup.append("g").selectAll("text").data(data).enter().append("text")
@@ -95,7 +96,11 @@ function renderCircles(data,xLinearScale,yLinearScale,onResize) {
     .attr("y", d => yLinearScale(d[chosenYAxis])+3)
     .classed("stateText",true).text(d => d.abbr);
 
-    circlesGroup.transition().duration(function(d){return onResize ? 0 : 1000;})
+    // circlesGroup.transition().duration(function(d){return onResize ? 0 : 1000;});
+    circlesGroup.transition()
+        .duration(100) .delay(function(d,i){ return i * (120 / 4); })
+        .attr('r', 17);
+    // Updating ToolTip
     circlesGroup.on('mouseover', function(d, i){
         toolTip.show(d,this);
       })
