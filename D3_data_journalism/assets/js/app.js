@@ -78,7 +78,7 @@ function render_axislabels(){
         .text("Obese (%)");
 }
 
-function renderCircles(data,xLinearScale,yLinearScale,onResize) {
+function renderCircles(data,xLinearScale,yLinearScale) {
     // Dinamically creating a toolTip
     var toolTip = d3.tip().attr("class", "d3-tip").offset([80, -60])
     .html(d => `<strong>${(d.abbr)}</strong><br>${chosenXAxis}: ${d[chosenXAxis]}<br> ${chosenYAxis}: ${d[chosenYAxis]}`);
@@ -156,7 +156,7 @@ function makeResponsive() {
         // Rendering both Axis
         renderAxes(xLinearScale,yLinearScale)
         // append initial circles
-        renderCircles(ucbData,xLinearScale,yLinearScale,true);
+        renderCircles(ucbData,xLinearScale,yLinearScale);
         render_axislabels(); // calling function to render the axis
     });
 }
