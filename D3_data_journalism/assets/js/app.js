@@ -1,3 +1,10 @@
+d3.csv("./assets/data/data.csv").then(function(ucbData, err) {   //reading our csv file
+
+      // parse data
+      console.log(ucbData)
+
+});
+
 // Initial Params. Making these variable global, that way can be accessed from anywhere in the code
 var chosenXAxis = "poverty";
 var chosenYAxis = "healthcare";
@@ -139,7 +146,7 @@ function makeResponsive() {
      chartGroup = svg.append("g")
     .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
-    d3.csv("../assets/data/data.csv").then(function(ucbData, err) {   //reading our csv file
+    d3.csv("./assets/data/data.csv").then(function(ucbData, err) {   //reading our csv file
         if (err) throw err;
           // parse data
           ucbData.forEach(function(data) {
